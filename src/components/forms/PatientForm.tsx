@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -13,27 +13,27 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { toast } from 'sonner';
-import { patientApi } from '@/lib/api';
-import { Patient } from '@/types';
+} from "@/components/ui/select";
+import { toast } from "sonner";
+import { patientApi } from "@/lib/api";
+import { Patient } from "@/types";
 
 const patientSchema = z.object({
-  first_name: z.string().min(2, 'First name must be at least 2 characters'),
-  last_name: z.string().min(2, 'Last name must be at least 2 characters'),
-  email: z.string().email('Invalid email address').optional().or(z.literal('')),
-  phone: z.string().min(10, 'Phone number must be at least 10 digits'),
+  first_name: z.string().min(2, "First name must be at least 2 characters"),
+  last_name: z.string().min(2, "Last name must be at least 2 characters"),
+  email: z.string().email("Invalid email address").optional().or(z.literal("")),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
   date_of_birth: z.string(),
-  gender: z.enum(['Male', 'Female', 'Other']),
+  gender: z.enum(["Male", "Female", "Other"]),
   address: z.string().optional(),
   medical_history: z.string().optional(),
   current_medication: z.string().optional(),
@@ -57,19 +57,21 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
   const form = useForm<PatientFormData>({
     resolver: zodResolver(patientSchema),
     defaultValues: {
-      first_name: patient?.first_name || '',
-      last_name: patient?.last_name || '',
-      email: patient?.email || '',
-      phone: patient?.phone || '',
-      date_of_birth: patient?.date_of_birth ? patient.date_of_birth.split('T')[0] : '',
-      gender: patient?.gender as 'Male' | 'Female' | 'Other' || 'Male',
-      address: patient?.address || '',
-      medical_history: patient?.medical_history || '',
-      current_medication: patient?.current_medication || '',
-      allergies: patient?.allergies || '',
-      emergency_contact: patient?.emergency_contact || '',
-      blood_group: patient?.blood_group || '',
-      insurance_number: patient?.insurance_number || '',
+      first_name: patient?.first_name || "",
+      last_name: patient?.last_name || "",
+      email: patient?.email || "",
+      phone: patient?.phone || "",
+      date_of_birth: patient?.date_of_birth
+        ? patient.date_of_birth.split("T")[0]
+        : "",
+      gender: (patient?.gender as "Male" | "Female" | "Other") || "Male",
+      address: patient?.address || "",
+      medical_history: patient?.medical_history || "",
+      current_medication: patient?.current_medication || "",
+      allergies: patient?.allergies || "",
+      emergency_contact: patient?.emergency_contact || "",
+      blood_group: patient?.blood_group || "",
+      insurance_number: patient?.insurance_number || "",
     },
   });
 
@@ -79,32 +81,34 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
 
       if (isEdit && patient) {
         await patientApi.update(patient.id, values);
-        toast.success('Patient updated successfully');
+        toast.success("Patient updated successfully");
       } else {
         await patientApi.create({
           ...values,
-          email: values.email ?? '',
-          address: values.address ?? '',
-          medical_history: values.medical_history ?? '',
-          current_medication: values.current_medication ?? '',
-          allergies: values.allergies ?? '',
-          emergency_contact: values.emergency_contact ?? '',
-          blood_group: values.blood_group ?? '',
-          insurance_number: values.insurance_number ?? '',
+          email: values.email ?? "",
+          address: values.address ?? "",
+          medical_history: values.medical_history ?? "",
+          current_medication: values.current_medication ?? "",
+          allergies: values.allergies ?? "",
+          emergency_contact: values.emergency_contact ?? "",
+          blood_group: values.blood_group ?? "",
+          insurance_number: values.insurance_number ?? "",
         });
-        toast.success('Patient registered successfully');
+        toast.success("Patient registered successfully");
       }
 
-      router.push('/dashboard/patients');
+      router.push("/dashboard/patients");
     } catch {
-      toast.error(isEdit ? 'Failed to update patient' : 'Failed to register patient');
+      toast.error(
+        isEdit ? "Failed to update patient" : "Failed to register patient"
+      );
     } finally {
       setIsLoading(false);
     }
   }
 
   return (
-        <Form {...form}>
+    <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
@@ -112,9 +116,13 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
             name="first_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>First Name</FormLabel>
+                <FormLabel className="text-gray-700">First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John" {...field} />
+                  <Input
+                    placeholder="John"
+                    {...field}
+                    className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -128,7 +136,11 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
               <FormItem>
                 <FormLabel>Last Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Doe" {...field} />
+                  <Input
+                    placeholder="Doe"
+                    {...field}
+                    className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -142,7 +154,12 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="john.doe@example.com" type="email" {...field} />
+                  <Input
+                    placeholder="john.doe@example.com"
+                    type="email"
+                    {...field}
+                    className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -156,7 +173,11 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
                 <FormControl>
-                  <Input placeholder="+1234567890" {...field} />
+                  <Input
+                    placeholder="+1234567890"
+                    {...field}
+                    className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -170,7 +191,11 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
               <FormItem>
                 <FormLabel>Date of Birth</FormLabel>
                 <FormControl>
-                  <Input type="date" {...field} />
+                  <Input
+                    type="date"
+                    {...field}
+                    className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -183,13 +208,16 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Gender</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary">
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary">
                     <SelectItem value="Male">Male</SelectItem>
                     <SelectItem value="Female">Female</SelectItem>
                     <SelectItem value="Other">Other</SelectItem>
@@ -206,13 +234,16 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Blood Group</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary">
                       <SelectValue placeholder="Select blood group" />
                     </SelectTrigger>
                   </FormControl>
-                  <SelectContent>
+                  <SelectContent className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary">
                     <SelectItem value="A+">A+</SelectItem>
                     <SelectItem value="A-">A-</SelectItem>
                     <SelectItem value="B+">B+</SelectItem>
@@ -235,7 +266,11 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
               <FormItem>
                 <FormLabel>Emergency Contact</FormLabel>
                 <FormControl>
-                  <Input placeholder="+1234567890" {...field} />
+                  <Input
+                    placeholder="+1234567890"
+                    {...field}
+                    className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -250,7 +285,11 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
             <FormItem>
               <FormLabel>Address</FormLabel>
               <FormControl>
-                <Textarea placeholder="Enter full address" {...field} />
+                <Textarea
+                  placeholder="Enter full address"
+                  {...field}
+                  className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -264,7 +303,11 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
             <FormItem>
               <FormLabel>Insurance Number</FormLabel>
               <FormControl>
-                <Input placeholder="INS-123456" {...field} />
+                <Input
+                  placeholder="INS-123456"
+                  {...field}
+                  className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -278,7 +321,11 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
             <FormItem>
               <FormLabel>Medical History</FormLabel>
               <FormControl>
-                <Textarea placeholder="Previous medical conditions, surgeries, etc." {...field} />
+                <Textarea
+                  placeholder="Previous medical conditions, surgeries, etc."
+                  {...field}
+                  className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -292,7 +339,11 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
             <FormItem>
               <FormLabel>Current Medication</FormLabel>
               <FormControl>
-                <Textarea placeholder="List all current medications" {...field} />
+                <Textarea
+                  placeholder="List all current medications"
+                  {...field}
+                  className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -306,7 +357,11 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
             <FormItem>
               <FormLabel>Allergies</FormLabel>
               <FormControl>
-                <Textarea placeholder="List all known allergies" {...field} />
+                <Textarea
+                  placeholder="List all known allergies"
+                  {...field}
+                  className="bg-gray-50 border border-gray-300 focus:ring-primary focus:border-primary"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -317,12 +372,18 @@ export function PatientForm({ patient, isEdit = false }: PatientFormProps) {
           <Button
             type="button"
             variant="outline"
-            onClick={() => router.push('/dashboard/patients')}
+            className="border-gray-300 text-gray-700 hover:bg-gray-200"
+            onClick={() => router.push("/dashboard/patients")}
           >
             Cancel
           </Button>
+          
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : isEdit ? 'Update Patient' : 'Register Patient'}
+            {isLoading
+              ? "Saving..."
+              : isEdit
+              ? "Update Patient"
+              : "Register Patient"}
           </Button>
         </div>
       </form>

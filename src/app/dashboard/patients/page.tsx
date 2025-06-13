@@ -36,6 +36,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Spinner } from "@/components/Spinner";
 
 export default function PatientsPage() {
   const router = useRouter();
@@ -55,9 +56,7 @@ export default function PatientsPage() {
   const handleSearch = async () => {
     if (searchQuery.trim()) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const results = await patientApi.search(searchQuery);
-        // Handle search results
+        await patientApi.search(searchQuery);
       } catch {
         toast.error("Failed to search patients");
       }
@@ -66,7 +65,6 @@ export default function PatientsPage() {
 
   const handleDelete = async () => {
     if (!selectedPatientId) return;
-
     try {
       await patientApi.delete(selectedPatientId);
       toast.success("Patient deleted successfully");
@@ -80,18 +78,21 @@ export default function PatientsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6  min-h-screen p-6 rounded-md">
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-bold tracking-tight">Patients</h2>
         {user?.role === "receptionist" && (
-          <Button onClick={() => router.push("/dashboard/patients/new")}>
+          <Button
+            onClick={() => router.push("/dashboard/patients/new")}
+            className="bg-blue-600 text-white hover:bg-blue-700"
+          >
             <Plus className="mr-2 h-4 w-4" />
             Add Patient
           </Button>
         )}
       </div>
 
-      <Card>
+      <Card className="bg-gray-50 border border-gray-200 shadow-sm">
         <CardHeader>
           <CardTitle>Patient Records</CardTitle>
           <div className="flex gap-4 mt-4">
@@ -100,23 +101,31 @@ export default function PatientsPage() {
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search patients..."
-                  className="pl-8"
+                  className="pl-8 bg-gray-100 border border-gray-300 focus:border-blue-400 focus:ring-blue-400"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()}
                 />
               </div>
             </div>
-            <Button onClick={handleSearch}>Search</Button>
+            <Button
+              className="bg-gray-200 text-gray-800 hover:bg-gray-300"
+              onClick={handleSearch}
+            >
+              Search
+            </Button>
           </div>
         </CardHeader>
+
         <CardContent>
           {isLoading ? (
-            <div className="text-center py-8">Loading...</div>
+            <div className="flex items-center py-8">
+              <Spinner />
+            </div>
           ) : (
             <>
-              <Table>
-                <TableHeader>
+              <Table className="rounded-md border border-gray-200">
+                <TableHeader className="bg-gray-100">
                   <TableRow>
                     <TableHead>Name</TableHead>
                     <TableHead>Email</TableHead>
@@ -129,7 +138,10 @@ export default function PatientsPage() {
                 </TableHeader>
                 <TableBody>
                   {data?.patients?.map((patient: Patient) => (
-                    <TableRow key={patient.id}>
+                    <TableRow
+                      key={patient.id}
+                      className="hover:bg-gray-50 border-b border-gray-100"
+                    >
                       <TableCell className="font-medium">
                         {patient.first_name} {patient.last_name}
                       </TableCell>
@@ -149,8 +161,12 @@ export default function PatientsPage() {
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent
+                            align="end"
+                            className="bg-white border border-gray-200 shadow-md shadow-gray-100 w-44 rounded-md"
+                          >
                             <DropdownMenuItem
+                              className="hover:bg-gray-100 text-gray-800 cursor-pointer"
                               onClick={() =>
                                 router.push(`/dashboard/patients/${patient.id}`)
                               }
@@ -161,6 +177,7 @@ export default function PatientsPage() {
                             {(user?.role === "receptionist" ||
                               user?.role === "doctor") && (
                               <DropdownMenuItem
+                                className="hover:bg-gray-100 text-gray-800 cursor-pointer"
                                 onClick={() =>
                                   router.push(
                                     `/dashboard/patients/${patient.id}/edit`
@@ -173,13 +190,13 @@ export default function PatientsPage() {
                             )}
                             {user?.role === "receptionist" && (
                               <DropdownMenuItem
-                                className="text-red-600"
+                                className="text-red-600 hover:bg-red-50 hover:text-red-400 cursor-pointer"
                                 onClick={() => {
                                   setSelectedPatientId(patient.id);
                                   setDeleteDialogOpen(true);
                                 }}
                               >
-                                <Trash className="mr-2 h-4 w-4" />
+                                <Trash className="mr-2 h-4 w-4 " />
                                 Delete
                               </DropdownMenuItem>
                             )}
@@ -200,6 +217,7 @@ export default function PatientsPage() {
                   <Button
                     variant="outline"
                     size="sm"
+                    className="bg-gray-100 border border-gray-300 hover:bg-gray-200"
                     onClick={() => setPage(page - 1)}
                     disabled={page === 1}
                   >
@@ -208,6 +226,7 @@ export default function PatientsPage() {
                   <Button
                     variant="outline"
                     size="sm"
+                    className="bg-gray-100 border border-gray-300 hover:bg-gray-200"
                     onClick={() => setPage(page + 1)}
                     disabled={!data?.patients || data.patients.length < 10}
                   >
@@ -221,7 +240,7 @@ export default function PatientsPage() {
       </Card>
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-white border border-gray-200 shadow-lg">
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
@@ -233,7 +252,7 @@ export default function PatientsPage() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-600 hover:bg-red-700 text-white"
             >
               Delete
             </AlertDialogAction>

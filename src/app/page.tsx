@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import Link from "next/link";
+import { Spinner } from "@/components/Spinner";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -76,12 +76,7 @@ export default function LoginPage() {
     }
   }
 
-  const Spinner = () => (
-    <div
-      className="h-5 w-5 animate-spin rounded-full border-2 border-blue-200 border-t-white"
-      role="status"
-    />
-  );
+  
 
   return (
     <div className="flex m-10 items-center justify-center">
@@ -141,16 +136,7 @@ export default function LoginPage() {
                 {isLoading ? <Spinner /> : "Login"}
               </Button>
 
-              <p className="text-center text-sm text-gray-500 mt-2">
-                Haven&apos;t received your credentials?{" "}
-                <span className="font-medium text-blue-600">
-                  Please contact the{" "}
-                  <Link href={"mailto:admin@healthcare.com"}>
-                    <span className="underline">admin</span>
-                  </Link>
-                  .
-                </span>
-              </p>
+              
 
               {/* Divider */}
               <div className="flex items-center my-6">

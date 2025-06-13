@@ -1,32 +1,32 @@
-'use client';
+"use client";
 
-import { ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from '@/components/ui/button';
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
-} from '@/components/ui/dropdown-menu';
-import { Users, LogOut, Menu } from 'lucide-react';
-import Link from 'next/link';
+import { ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Users, LogOut, Menu } from "lucide-react";
+import Link from "next/link";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const { user, logout } = useAuth();
   const router = useRouter();
 
   if (!user) {
-    router.push('/');
+    router.push("/");
     return null;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b border-gray-400">
+    <div className="min-h-screen bg-gray-100">
+      <nav className="bg-white shadow-sm border-b  border border-gray-200 ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
@@ -50,23 +50,40 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <div className="flex items-center">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    className="flex items-center gap-2 px-3 py-2  hover:bg-gray-100 rounded-md transition"
+                  >
                     <Menu className="h-5 w-5" />
-                    <span>{user.name}</span>
+                    <span className="font-medium">{user.name}</span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-sm">
+
+                <DropdownMenuContent
+                  align="end"
+                  className="bg-white border border-gray-200 rounded-md shadow-lg shadow-gray-100 w-56"
+                >
+                  <DropdownMenuLabel className="px-3 py-2 text-sm font-semibold ">
+                    My Account
+                  </DropdownMenuLabel>
+
+                  <DropdownMenuSeparator className="border-t border-blue-100" />
+
+                  <DropdownMenuItem className="px-3 py-2 text-sm  hover:bg-blue-50 cursor-default">
                     {user.email}
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="text-sm capitalize">
+
+                  <DropdownMenuItem className="px-3 py-2 text-sm  capitalize hover:bg-blue-50 cursor-default">
                     Role: {user.role}
                   </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={logout} className="text-red-600">
-                    <LogOut className="mr-2 h-4 w-4" />
+
+                  <DropdownMenuSeparator className="border-t border-blue-100" />
+
+                  <DropdownMenuItem
+                    onClick={logout}
+                    className="px-3 py-2 text-sm text-red-600 hover:text-red-800  cursor-pointer"
+                  >
+                    <LogOut className="mr-2 h-4 w-4 " />
                     Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -75,9 +92,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
       </nav>
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        {children}
-      </main>
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">{children}</main>
     </div>
   );
 }

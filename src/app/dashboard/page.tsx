@@ -46,7 +46,7 @@ export default function DashboardPage() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (
-          <Card key={stat.title}>
+          <Card key={stat.title} className='border border-gray-200 bg-gray-50 shadow-sm hover:shadow-md transition-shadow duration-200'>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
               <stat.icon className="h-4 w-4 text-muted-foreground" />
@@ -60,7 +60,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Card>
+        <Card className='border border-gray-200 bg-gray-50 shadow-sm hover:shadow-md transition-shadow duration-200'>
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
             <CardDescription>Common tasks for {user?.role}s</CardDescription>
@@ -68,14 +68,14 @@ export default function DashboardPage() {
           <CardContent className="space-y-2">
             {user?.role === 'receptionist' ? (
               <>
-                <Link href="/dashboard/patients/new" className="block p-3 rounded-lg hover:bg-gray-100">
+                <Link href="/dashboard/patients/new" className="block p-3 rounded-lg hover:bg-gray-200 bg-gray-100 border border-gray-200">
                   Register New Patient
                 </Link>
                 
               </>
             ) : (
               <>
-                <Link href="/dashboard/patients" className="block p-3 rounded-lg hover:bg-gray-100">
+                <Link href="/dashboard/patients" className="block p-3 rounded-lg  hover:bg-gray-200 bg-gray-100 border border-gray-200">
                   View Patient Records
                 </Link>
                 
@@ -84,7 +84,7 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='border border-gray-200 bg-gray-50 shadow-sm hover:shadow-md transition-shadow duration-200'>
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>
             <CardDescription>Latest updates in the system</CardDescription>
