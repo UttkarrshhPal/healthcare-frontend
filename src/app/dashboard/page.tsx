@@ -71,18 +71,14 @@ export default function DashboardPage() {
                 <Link href="/dashboard/patients/new" className="block p-3 rounded-lg hover:bg-gray-100">
                   Register New Patient
                 </Link>
-                <Link href="/dashboard/appointments/new" className="block p-3 rounded-lg hover:bg-gray-100">
-                  Schedule Appointment
-                </Link>
+                
               </>
             ) : (
               <>
                 <Link href="/dashboard/patients" className="block p-3 rounded-lg hover:bg-gray-100">
                   View Patient Records
                 </Link>
-                <Link href="/dashboard/appointments" className="block p-3 rounded-lg hover:bg-gray-100">
-                  Today&apos;s Appointments
-                </Link>
+                
               </>
             )}
           </CardContent>
